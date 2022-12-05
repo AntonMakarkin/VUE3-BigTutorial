@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <form>
+    <form @submit.prevent>
       <input 
         v-bind:value="title"
         @input="title = $event.target.value" 
@@ -43,6 +43,8 @@
           body: this.body
         }
         this.posts.push(newPost)
+        this.title = '',
+        this.body = ''
       }
     }
   }
