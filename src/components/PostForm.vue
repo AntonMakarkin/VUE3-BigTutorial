@@ -1,14 +1,14 @@
 <template>
-    <form @submit.prevent>
+    <form class="form" @submit.prevent>
       <input 
-        v-bind:value="title"
-        @input="title = $event.target.value" 
+        v-model="post.title"
+        @input="post.title = $event.target.value" 
         class="input" 
         type="text" 
         placeholder="Название">
       <input 
-        v-bind:value="body"
-        @input="body = $event.target.value" 
+        v-model="post.body"
+        @input="post.body = $event.target.value" 
         class="input" 
         type="text" 
         placeholder="Описание">
@@ -18,7 +18,25 @@
 
 <script>
     export default {
-        
+        data() {
+            return {
+                post: {
+                    id: '',
+                    title: '',
+                    body: ''
+                }
+            }
+        },
+        methods: {
+            createPost() {
+                this.post.id = Date.now()
+                this.$emit('create', this.post)
+                this.post = {
+                    title: '',
+                    body: ''
+                }
+            }
+        }
     }
 </script>
 
@@ -26,6 +44,7 @@
   .form {
     display: flex;
     flex-direction: column;
+    margin-bottom: 15px;
   }
 
   .input {
