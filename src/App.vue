@@ -1,29 +1,19 @@
 <template>
   <div class="app">
-    <form @submit.prevent>
-      <input 
-        v-bind:value="title"
-        @input="title = $event.target.value" 
-        class="input" 
-        type="text" 
-        placeholder="Название">
-      <input 
-        v-bind:value="body"
-        @input="body = $event.target.value" 
-        class="input" 
-        type="text" 
-        placeholder="Описание">
-      <button class="btn" @click="createPost">Создать</button>
-    </form>
-    <div class="post" v-for="post in posts" key:="post.id">
-      <div><strong>Название:</strong>{{ post.title }}</div>
-      <div><strong>Описание:</strong>{{ post.body }}</div>
-    </div>
+    <PostForm/>
+    <PostList/>
   </div>
 </template>
 
 <script>
+  import PostForm from "@/components/PostForm.vue";
+  import PostList from "@/components/PostList.vue"
+
   export default {
+    components: {
+      PostForm,
+      PostList
+    },
     data() {
       return {
         posts: [
@@ -59,31 +49,5 @@
 
   .app {
     padding: 20px;
-  }
-
-  .post {
-    padding: 15px;
-    border: 2px solid teal;
-    margin-top: 15px;
-  }
-
-  .form {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .input {
-    width: 100%;
-    border: 1px solid teal;
-    padding: 10px 15px;
-    margin-top: 15px;
-  }
-
-  .btn {
-    margin-top: 15px;
-    align-self: flex-end;
-    padding: 10px 15px;
-    background: none;
-    border: 1px solid teal;
   }
 </style>
