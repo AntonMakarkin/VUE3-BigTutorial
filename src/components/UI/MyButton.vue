@@ -5,9 +5,8 @@
 </template>
 
 <script>
-    name: 'MyButton'
     export default {
-        
+        name: 'MyButton'
     }
 </script>
 
