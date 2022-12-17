@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <h1>Страница с постами</h1>
-    <input type="text" v-model.trim.number="modificatorValue">
+    <MyButton @click="fetchPosts">Получить посты</MyButton>
     <MyButton @click="showDialog" style="margin: 15px 0">Создать пост</MyButton>
     <MyDialog v-model:show="dialogVisible">
       <PostForm @create="createPost"/>
@@ -12,7 +12,8 @@
 
 <script>
   import PostForm from "@/components/PostForm.vue";
-  import PostList from "@/components/PostList.vue"
+  import PostList from "@/components/PostList.vue";
+  import axios from 'axios';
 
   export default {
     components: {
@@ -40,6 +41,14 @@
       },
       showDialog() {
         this.dialogVisible = true;
+      },
+      async fetchPosts() {
+        try {
+          const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
+          console.log(response)
+        } catch (e) {
+          alert('Ошибка')
+        }
       }
     }
   }
