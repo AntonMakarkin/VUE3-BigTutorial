@@ -22,6 +22,7 @@
 <script>
     export default {
         name: 'PostForm',
+        emits: ['create'],
         data() {
             return {
                 post: {
@@ -40,6 +41,14 @@
                     body: ''
                 }
             }
+        },
+        watch: {
+          post: {
+            handler(newVal) {
+              console.log(newVal)
+            },
+            deep: true
+          }
         }
     }
 </script>
