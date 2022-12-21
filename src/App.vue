@@ -11,6 +11,15 @@
     </MyDialog>
     <PostList :posts="sortedAndSearchedPosts" @remove="removePost" v-if="!isPostLoading" />
     <div v-else>Идет загрузка...</div>
+    <div class="page__wrapper">
+      <div 
+        v-for="page in totalPages" 
+        :key="page"
+        class="page"
+        >
+        {{ page }}
+        </div>
+    </div>
   </div>
 </template>
 
@@ -31,6 +40,9 @@
         isPostLoading: false,
         selectedSort: '',
         searchQuery: '',
+        page: 1,
+        limit: 10,
+        totalPages: 1,
         sortOptions: [
           {value: 'title', name: 'По названию'},
           {value: 'body', name: 'По содержимому'}
@@ -51,9 +63,14 @@
       async fetchPosts() {
         try {
           this.isPostLoading = true;
-            const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
+            const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+              params: {
+                _page: this.page,
+                _limit: this.limit
+              }
+            })
+            this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit);
             this.posts = response.data;
-            this.isPostLoading = false;
         } catch (e) {
           alert('Ошибка')
         } finally {
@@ -93,5 +110,19 @@
     display: flex;
     justify-content: space-between;
     margin: 15px 0;
+  }
+
+  .page__wrapper {
+    display: flex;
+    margin-top: 15px;
+  }
+
+  .page {
+    border: 1px solid black;
+    padding: 10px;
+  }
+
+  .current-page {
+    border: 2px solid teal;
   }
 </style>
