@@ -11,7 +11,8 @@
     </MyDialog>
     <PostList :posts="sortedAndSearchedPosts" @remove="removePost" v-if="!isPostLoading" />
     <div v-else>Идет загрузка...</div>
-    <div class="page__wrapper">
+    <div ref="observer" class="observer"></div>
+    <!--<div class="page__wrapper">
       <div 
         v-for="pageNumber in totalPages" 
         :key="pageNumber"
@@ -23,7 +24,7 @@
         >
         {{ pageNumber }}
         </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -64,9 +65,9 @@
       showDialog() {
         this.dialogVisible = true;
       },
-      changePage(pageNumber) {
+      /*changePage(pageNumber) {
         this.page = pageNumber;
-      },
+      },*/
       async fetchPosts() {
         try {
           this.isPostLoading = true;
@@ -83,10 +84,36 @@
         } finally {
           this.isPostLoading = false
         }
+      },
+      async loadMorePosts() {
+        try {
+          this.page += 1;
+            const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+              params: {
+                _page: this.page,
+                _limit: this.limit
+              }
+            })
+            this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit);
+            this.posts = [...this.posts, ...response.data];
+        } catch (e) {
+          alert('Ошибка')
+        }
       }
     },
     mounted() {
       this.fetchPosts();
+      const options = {
+        rootMargin: '0px',
+        threshold: 1.0
+      }
+      const callback = (entries, observer) => {
+        if (entries[0].isIntersecting && this.page < this.totalPages) {
+          this.loadMorePosts()
+        }
+      };
+      const observer = new IntersectionObserver(callback, options);
+      observer.observe(this.$refs.observer)
     },
     computed: {
       sortedPosts() {
@@ -97,9 +124,9 @@
       }
     },
     watch: {
-      page() {
+      /*page() {
         this.fetchPosts();
-      }
+      }*/
     }
   }
 </script>
